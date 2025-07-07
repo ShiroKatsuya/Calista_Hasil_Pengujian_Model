@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Benchmark Lanjutan: MMLU, BIG-Bench, & Bleu-Meteor</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Impor Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Impor Ionicons untuk ikon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'navy': '#0a192f',
+              'light-navy': '#112240',
+              'lightest-navy': '#233554',
+              'slate': '#8892b0',
+              'light-slate': '#a8b2d1',
+              'lightest-slate': '#ccd6f6',
+              'brand': '#64ffda',
+              'pink': '#ff79c6',
+              'orange': '#ffb86c',
+              'yellow': '#f1fa8c',
+              'purple': '#bd93f9'
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Latar belakang abu-abu gelap */
+            color: #d1d5db; /* Teks abu-abu terang */
+        }
+        /* Kustomisasi scrollbar untuk tampilan yang lebih baik */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        /* Gaya untuk blok kode */
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+        }
+        /* Efek gradien pada teks */
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #a78bfa, #34d399, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-sky {
+             background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-purple {
+             background: linear-gradient(to right, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-green {
+             background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-orange {
+             background: linear-gradient(to right, #f97316, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            @apply px-3 py-2 text-gray-300 rounded-md transition-all duration-300 text-sm font-medium;
+        }
+        .nav-link:hover {
+            @apply bg-gray-700 text-white;
+        }
+        .nav-link.active {
+             @apply bg-sky-500 text-white shadow-lg shadow-sky-500/20;
+        }
+        .chart-container {
+            position: relative;
+            min-height: 450px;
+            width: 100%;
+        }
+        .glass-card {
+            background: rgba(17, 34, 64, 0.75); /* light-navy with transparency */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(35, 53, 84, 0.5); /* lightest-navy with transparency */
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <section id="result" class="pt-16">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Laporan Benchmark Lanjutan</h1>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+                Analisis pada benchmark MMLU (Pro), BIG-Bench, dan Bleu-Meteor.
+            </p>
+        </header>
+
+        <!-- MMLU (Pro) Section -->
+        <section id="mmlu-pro" class="mb-16">
+            <h2 class="text-3xl font-bold gradient-text-sky mb-6 border-l-4 border-sky-500 pl-4">Pengujian: MMLU (Pro) - Computer Science</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                    <div class="chart-container">
+                        <canvas id="mmluChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 overflow-x-auto">
+                    <h3 class="font-bold text-xl text-sky-400 mb-4">Skor MMLU</h3>
+                    <table id="mmluTable" class="w-full text-left text-sm">
+                        <!-- Table content will be generated by script -->
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIG-Bench Hard Section -->
+        <section id="big-bench" class="mb-16">
+            <h2 class="text-3xl font-bold gradient-text-purple mb-6 border-l-4 border-purple-500 pl-4">Pengujian: BIG-Bench Hard</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                 <div class="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                    <div class="chart-container">
+                        <canvas id="bigBenchChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 overflow-x-auto">
+                    <h3 class="font-bold text-xl text-purple-400 mb-4">Akurasi (%)</h3>
+                     <table id="bigBenchTable" class="w-full text-left text-sm">
+                        <!-- Table content will be generated by script -->
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bleu-Meteor Section -->
+        <section id="bleu-meteor" class="mb-16">
+            <h2 class="text-3xl font-bold gradient-text-orange mb-6 border-l-4 border-orange-500 pl-4">Pengujian: Bleu-Meteor</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                 <div class="lg:col-span-3 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                    <div class="chart-container">
+                        <canvas id="bleuMeteorChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-2 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700 overflow-x-auto">
+                    <h3 class="font-bold text-xl text-orange-400 mb-4">Skor Rata-rata (%)</h3>
+                     <table id="bleuMeteorTable" class="w-full text-left text-sm">
+                        <!-- Table content will be generated by script -->
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </section>
+
+    <section id="conclusion" class="pt-16">
+        <h2 class="text-3xl font-bold gradient-text-green mb-6 border-l-4 border-green-500 pl-4">Kesimpulan</h2>
+        <div class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+            <p class="text-lg text-gray-300">
+                Berdasarkan hasil pengujian komprehensif pada benchmark MMLU (Pro) untuk domain Computer Science, BIG-Bench Hard, dan Bleu-Meteor, laporan ini menyajikan analisis performa model Llama 3.2 3B dan Gemma 3 1B, baik dalam versi baseline maupun varian yang telah di-fine-tune.
+            </p>
+            <p class="mt-4 text-lg text-gray-300">
+                Pada benchmark MMLU (Pro), fine-tuning menunjukkan dampak positif yang signifikan. Model Llama 3.2 3B (R32 LA32 V2) mencapai skor tertinggi di antara varian Llama, yaitu 15.94%, menunjukkan peningkatan moderat dari baseline (13.04%). Namun, peningkatan paling mencolok terlihat pada model Gemma 3 1B. Versi baseline Gemma 3 1B hanya mencatat skor 7.25%, namun setelah fine-tuning, khususnya varian (R64 LA64), performanya melonjak drastis hingga mencapai 15.94%, setara dengan performa terbaik Llama 3.2 3B di benchmark ini. Ini mengindikasikan bahwa fine-tuning sangat efektif dalam meningkatkan kemampuan penalaran dan pemahaman kontekstual model Gemma 3 1B dalam domain ilmu komputer.
+            </p>
+            <p class="mt-4 text-lg text-gray-300">
+                Dalam pengujian BIG-Bench Hard, model Gemma 3 1B menunjukkan keunggulan yang jauh lebih superior dibandingkan Llama 3.2 3B. Meskipun baseline Llama 3.2 3B tercatat 0% (yang memerlukan investigasi lebih lanjut terhadap proses pengujiannya), varian terbaiknya hanya mencapai 22% (R16 LA16). Sebaliknya, model Gemma 3 1B baseline sudah mencapai 28%, dan setelah fine-tuning, seluruh varian Gemma 3 1B (R64 LA64, R32 LA32, R16 LA16, R8 Multimodal) secara konsisten mencapai akurasi 62%. Dominasi Gemma 3 1B pada BIG-Bench Hard menegaskan kemampuannya yang lebih kuat dalam menangani tugas-tugas penalaran dan pemecahan masalah yang kompleks setelah proses fine-tuning.
+            </p>
+            <p class="mt-4 text-lg text-gray-300">
+                Untuk metrik generasi bahasa seperti BLEU dan METEOR, model Llama 3.2 3B secara umum menunjukkan performa yang sedikit lebih baik dibandingkan Gemma 3 1B. Model Llama 3.2 3B baseline dan varian fine-tune-nya mempertahankan skor BLEU di kisaran 28-29% dan METEOR di kisaran 64-65%. Sementara itu, model Gemma 3 1B, baik baseline maupun fine-tuned, berada di rentang skor BLEU 25-27% dan METEOR 60-61%. Perbedaan ini mengindikasikan bahwa, dalam konteks tugas yang diukur oleh BLEU dan METEOR, Llama 3.2 3B cenderung menghasilkan teks yang sedikit lebih mendekati referensi atau memiliki kualitas terjemahan/ringkasan yang lebih baik. Namun, perlu dicatat bahwa fine-tuning tidak menghasilkan lonjakan performa yang sebesar pada MMLU atau BIG-Bench Hard untuk kedua model dalam hal metrik ini.
+            </p>
+            <p class="mt-4 text-lg text-gray-300">
+                Secara keseluruhan, hasil pengujian menyoroti karakteristik yang berbeda dari kedua seri model. Model Gemma 3 1B, meskipun memiliki ukuran parameter yang lebih kecil dan performa baseline yang lebih rendah, menunjukkan potensi peningkatan yang luar biasa melalui fine-tuning, terutama dalam tugas-tugas penalaran kompleks seperti yang diukur oleh BIG-Bench Hard dan MMLU (Pro). Di sisi lain, model Llama 3.2 3B menunjukkan konsistensi yang baik dalam metrik generasi bahasa seperti BLEU dan METEOR. Pemilihan model yang tepat akan sangat bergantung pada prioritas aplikasi: jika fokus pada kemampuan penalaran dan pemecahan masalah, Gemma 3 1B yang di-fine-tune sangat menjanjikan; sedangkan untuk tugas generasi bahasa umum, Llama 3.2 3B mungkin menjadi pilihan yang lebih stabil.
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // --- DATA SOURCE ---
+        const benchmarkData = {
+            models: [
+                { name: 'Llama 3.2 3B (Baseline)', shortName: 'Llama 3.2 3B (Base)' },
+                { name: 'Llama 3.2 3B (R64 LA64)', shortName: 'Llama 3.2 3B (R64)' },
+                { name: 'Llama 3.2 3B (R16 LA16)', shortName: 'Llama 3.2 3B (R16)' },
+                { name: 'Llama 3.2 3B (R32 LA32 V2)', shortName: 'Llama 3.2 3B (R32)' },
+                { name: 'Llama 3.2 3B (v1 Q8_0)', shortName: 'Llama 3.2 3B (v1)' },
+                { name: 'Gemma 3 1B (Baseline)', shortName: 'Gemma 3 1B (Base)' },
+                { name: 'Gemma 3 1B (R64 LA64)', shortName: 'Gemma 3 1B (R64)' },
+                { name: 'Gemma 3 1B (R32 LA32)', shortName: 'Gemma 3 1B (R32)' },
+                { name: 'Gemma 3 1B (R16 LA16)', shortName: 'Gemma 3 1B (R16)' },
+                { name: 'Gemma 3 1B (R8 Multimodal)', shortName: 'Gemma 3 1B (R8 Multi)' }
+            ],
+            mmlu: [
+                { score: 13.04, correct: 9, total: 69, time: '2.85s/it' },
+                { score: 14.49, correct: 10, total: 69, time: '7.45s/it' },
+                { score: 11.59, correct: 8, total: 69, time: '13.63s/it' },
+                { score: 15.94, correct: 11, total: 69, time: '1.82s/it' },
+                { score: 14.49, correct: 10, total: 69, time: '3.12s/it' },
+                { score: 7.25, correct: 5, total: 69, time: '3.96s/it' },
+                { score: 15.94, correct: 11, total: 69, time: '12.85s/it' },
+                { score: 14.49, correct: 10, total: 69, time: '13.84s/it' },
+                { score: 11.59, correct: 8, total: 69, time: '13.63s/it' },
+                { score: 14.49, correct: 10, total: 69, time: '15.86s/it' }
+            ],
+            bigBench: [
+                { accuracy: 0, time: '2.85s/it' }, { accuracy: 11, time: '7.45s/it' }, { accuracy: 22, time: '13.63s/it' }, { accuracy: 16, time: '1.82s/it' }, { accuracy: 17, time: '3.12s/it' },
+                { accuracy: 28, time: '3.96s/it' }, { accuracy: 62, time: '12.85s/it' }, { accuracy: 62, time: '13.84s/it' }, { accuracy: 62, time: '13.63s/it' }, { accuracy: 62, time: '15.86s/it' }
+            ],
+            bleuMeteor: [
+                { bleu: 29.85, meteor: 65.54 }, { bleu: 29.90, meteor: 65.83 }, { bleu: 29.97, meteor: 65.60 },
+                { bleu: 29.46, meteor: 64.75 }, { bleu: 28.24, meteor: 64.21 }, { bleu: 25.86, meteor: 60.31 },
+                { bleu: 27.54, meteor: 61.05 }, { bleu: 27.34, meteor: 60.92 }, { bleu: 27.36, meteor: 61.05 },
+                { bleu: 27.51, meteor: 61.01 }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modelLabels = benchmarkData.models.map(m => m.shortName);
+            const chartColors = [
+                '#38bdf8', '#a78bfa', '#34d399', '#f59e0b', '#f97316',
+                '#818cf8', '#f472b6', '#6ee7b7', '#facc15', '#d1d5db' // Adjusted colors to match gradients
+            ];
+
+            // --- RENDER MMLU (PRO) SECTION ---
+            const mmluScores = benchmarkData.mmlu.map(d => d.score);
+            renderBarChart('mmluChart', 'Skor MMLU (%)', modelLabels, mmluScores, '#38bdf8'); // Using a sky blue for MMLU
+            renderTable('mmluTable', 
+                ['Model', 'Skor (%)', 'Waktu/iterasi'], 
+                benchmarkData.models.map((m, i) => [m.shortName, benchmarkData.mmlu[i].score.toFixed(2), benchmarkData.mmlu[i].time])
+            );
+
+            // --- RENDER BIG-BENCH HARD SECTION ---
+            const bigBenchScores = benchmarkData.bigBench.map(d => d.accuracy);
+            renderBarChart('bigBenchChart', 'Akurasi BIG-Bench Hard (%)', modelLabels, bigBenchScores, '#a78bfa'); // Using a purple for BIG-Bench
+            renderTable('bigBenchTable', 
+                ['Model', 'Akurasi (%)', 'Waktu/iterasi'], 
+                benchmarkData.models.map((m, i) => [m.shortName, benchmarkData.bigBench[i].accuracy, benchmarkData.bigBench[i].time])
+            );
+
+            // --- RENDER BLEU-METEOR SECTION ---
+            renderGroupedBarChart('bleuMeteorChart', modelLabels, {
+                bleu: benchmarkData.bleuMeteor.map(d => d.bleu),
+                meteor: benchmarkData.bleuMeteor.map(d => d.meteor)
+            });
+            renderTable('bleuMeteorTable', 
+                ['Model', 'BLEU (%)', 'METEOR (%)'], 
+                benchmarkData.models.map((m, i) => [
+                    m.shortName, 
+                    benchmarkData.bleuMeteor[i].bleu.toFixed(2), 
+                    benchmarkData.bleuMeteor[i].meteor.toFixed(2)
+                ])
+            );
+
+            // Set generation date
+            document.getElementById('generation-date').textContent = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric', month: 'long', year: 'numeric'
+            });
+        });
+
+        // --- UTILITY FUNCTIONS ---
+        
+        function renderTable(tableId, headers, dataRows) {
+            const table = document.getElementById(tableId);
+            let html = `<thead class="text-xs text-gray-300 uppercase bg-gray-700"><tr>`; // Updated table header style
+            headers.forEach(h => { html += `<th scope="col" class="px-6 py-3">${h}</th>`; });
+            html += `</tr></thead><tbody>`;
+            dataRows.forEach(row => {
+                html += `<tr class="border-b border-gray-700 hover:bg-gray-700">`; // Updated table row style
+                row.forEach((cell, i) => {
+                    html += `<td class="px-6 py-4 ${i === 0 ? 'font-medium text-white' : ''}">${cell}</td>`; // Updated text color for first cell
+                });
+                html += `</tr>`;
+            });
+            html += `</tbody>`;
+            table.innerHTML = html;
+        }
+
+        function renderBarChart(canvasId, label, labels, data, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: color + '99',
+                        borderColor: color,
+                        borderWidth: 2,
+                        borderRadius: 4,
+                    }]
+                },
+                options: commonChartOptions()
+            });
+        }
+
+        function renderGroupedBarChart(canvasId, labels, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'BLEU Score (%)',
+                            data: data.bleu,
+                            backgroundColor: '#f9731699', // Orange from index.html gradient
+                            borderColor: '#f97316',
+                            borderWidth: 2,
+                            borderRadius: 4,
+                        },
+                        {
+                            label: 'METEOR Score (%)',
+                            data: data.meteor,
+                            backgroundColor: '#facc1599', // Yellow from index.html gradient
+                            borderColor: '#facc15',
+                            borderWidth: 2,
+                            borderRadius: 4,
+                        }
+                    ]
+                },
+                options: commonChartOptions()
+            });
+        }
+
+        function commonChartOptions() {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(209, 213, 219, 0.1)' }, // Gray-300 from index.html
+                        ticks: {
+                            color: '#d1d5db', // Gray-400 from index.html
+                            callback: value => value + '%'
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#d1d5db' } // Gray-400 from index.html
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { color: '#e5e7eb', font: { size: 12 }, boxWidth: 20 } // Gray-200 from index.html
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ${context.parsed.y.toFixed(2)}%`
+                        }
+                    }
+                }
+            };
+        }
+    </script>
+</body>
+</html>

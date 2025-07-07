@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Evaluasi Benchmark LLM</title>
+    
+    <!-- Impor Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Impor Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Impor Ionicons untuk ikon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Latar belakang abu-abu gelap */
+            color: #d1d5db; /* Teks abu-abu terang */
+        }
+        /* Kustomisasi scrollbar untuk tampilan yang lebih baik */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        /* Gaya untuk blok kode */
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+        }
+        /* Efek gradien pada teks */
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #a78bfa, #34d399, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-sky {
+             background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-purple {
+             background: linear-gradient(to right, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-green {
+             background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-orange {
+             background: linear-gradient(to right, #f97316, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            @apply px-3 py-2 text-gray-300 rounded-md transition-all duration-300 text-sm font-medium;
+        }
+        .nav-link:hover {
+            @apply bg-gray-700 text-white;
+        }
+        .nav-link.active {
+             @apply bg-sky-500 text-white shadow-lg shadow-sky-500/20;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Utama dan Navigasi -->
+    <header class="sticky top-0 z-50 bg-gray-900/70 backdrop-blur-lg border-b border-gray-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl font-bold gradient-text">Dasbor Evaluasi LLM</h1>
+                <nav class="hidden md:flex items-center space-x-1">
+                    <a href="#big_bench_hard" class="nav-link" onclick="loadIframe('big_bench_hard')">BBH</a>
+                    <a href="#mmlu-pro-iframe" class="nav-link" onclick="loadIframe('mmlu-pro-iframe')">MMLU Pro</a>
+                    <a href="#translation-benchmark" class="nav-link" onclick="loadIframe('translation-iframe')">BLEU & METEOR</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8" style="width: 100%;">
+
+
+
+        <iframe id="big_bench_hard" src="big_bench_hard.html" style="width:100%; ; height: 100vh; border: none;"></iframe>
+
+       
+        <!-- Pemisah Antar Bagian -->
+        <div class="my-20 border-t border-dashed border-gray-700"></div>
+        <iframe id="mmlu-pro-iframe" src="MMLU_Pro.html" style="width:100%; ; height: 100vh; border: none;"></iframe>
+
+        <div class="my-20 border-t border-dashed border-gray-700"></div>
+
+
+        <!-- =================================================================== -->
+        <!-- ================= BAGIAN TRANSLATION BENCHMARK ==================== -->
+        <!-- =================================================================== -->
+        <section id="translation-benchmark" class="pt-16">
+            <header class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl font-bold mb-2 gradient-text-orange">Evaluasi Kualitas Terjemahan</h2>
+                <p class="text-lg text-gray-400">Mengukur Akurasi Terjemahan dengan Metrik BLEU & METEOR</p>
+            </header>
+            <main class="space-y-12">
+                <section class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-2xl font-bold text-orange-400 mb-4 flex items-center">
+                        <ion-icon name="language-outline" class="mr-3 text-3xl"></ion-icon>
+                        Tentang Metrik BLEU & METEOR
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        Bagian ini menguji kemampuan model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">llama3-2.3b</code> dalam menerjemahkan teks dari Bahasa Prancis ke Bahasa Inggris menggunakan dataset WMT14. Kualitas terjemahan diukur menggunakan metrik <strong class="text-white">BLEU</strong> dan <strong class="text-white">METEOR</strong>.
+                    </p>
+                </section>
+                
+                <section>
+                     <h3 class="text-2xl font-bold text-orange-400 mb-4 flex items-center">
+                        <ion-icon name="code-slash-outline" class="mr-3 text-3xl"></ion-icon>
+                        Kode Sumber: <code class="text-gray-300">bleu_meteor.py</code>
+                    </h3>
+                    <div class="relative">
+                        <button onclick="copyCode('code-translation')" class="absolute top-4 right-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-all duration-200 text-sm">
+                            <ion-icon name="clipboard-outline" class="mr-2"></ion-icon>
+                            <span id="copy-text-translation">Salin</span>
+                        </button>
+                        <pre id="code-translation" class="code-block language-python"><code>import ollama
+from datasets import load_dataset
+import json
+import nltk
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+from nltk.translate.meteor_score import meteor_score
+
+nltk.download('punkt')
+nltk.download('wordnet')
+
+dataset = load_dataset("wmt14", "fr-en", split="test[:100]")
+MODEL_NAME = 'llama3-2.3b:latest' 
+
+all_references = []
+all_candidates = []
+meteor_scores = []
+bleu_scores_per_sentence = []
+
+for item in dataset:
+    prompt = item['translation']['fr']
+    reference_text = item['translation']['en']
+
+    structured_prompt = f"""Translate the following French text to English. Your response should contain only the translated text.
+French: {prompt}
+English:"""
+
+    response = ollama.generate(
+        model=MODEL_NAME,
+        prompt=structured_prompt,
+        stream=False,
+        options={"temperature": 0.2}
+    )
+    candidate_text = response['response'].strip()
+
+    reference_tokenized = [nltk.word_tokenize(reference_text)]
+    candidate_tokenized = nltk.word_tokenize(candidate_text)
+    
+    current_bleu = sentence_bleu(reference_tokenized, candidate_tokenized, smoothing_function=SmoothingFunction().method1)
+    current_meteor = meteor_score(reference_tokenized, candidate_tokenized)
+    
+    bleu_scores_per_sentence.append(current_bleu)
+    meteor_scores.append(current_meteor)
+</code></pre>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3 class="text-2xl font-bold text-orange-400 mb-6 flex items-center">
+                        <ion-icon name="layers-outline" class="mr-3 text-3xl"></ion-icon>
+                        Penjelasan Kode Terjemahan
+                    </h3>
+                    <div class="space-y-6">
+                        <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-lg text-white mb-2">1. Pemuatan Dataset & Model</h4>
+                            <p class="text-gray-300">Skrip memuat 10 sampel dari dataset WMT14 (Prancis-Inggris) dan menggunakan model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">llama3-2.3b</code>.</p>
+                        </div>
+                        <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-lg text-white mb-2">2. Tokenisasi dan Perhitungan Skor</h4>
+                            <p class="text-gray-300">Teks referensi dan kandidat dipecah menjadi token. Pustaka NLTK kemudian menghitung skor <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">sentence_bleu</code> dan <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">meteor_score</code> untuk setiap pasangan.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                     <h3 class="text-2xl font-bold text-orange-400 mb-6 flex items-center">
+                        <ion-icon name="analytics-outline" class="mr-3 text-3xl"></ion-icon>
+                        Contoh Visualisasi Hasil Terjemahan
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center">
+                            <h4 class="text-lg font-medium text-gray-400 mb-2">Rata-rata Skor BLEU</h4>
+                            <p class="text-5xl font-bold gradient-text-orange">25.41</p>
+                            <p class="text-gray-400 mt-2">(Skala 0-100, lebih tinggi lebih baik)</p>
+                        </div>
+                         <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center">
+                            <h4 class="text-lg font-medium text-gray-400 mb-2">Rata-rata Skor METEOR</h4>
+                            <p class="text-5xl font-bold gradient-text-orange">48.90</p>
+                            <p class="text-gray-400 mt-2">(Skala 0-100, lebih tinggi lebih baik)</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-lg text-white mb-3">Contoh Terjemahan 1</h5>
+                            <p class="text-sm text-gray-400 mb-2"><strong>Sumber (FR):</strong> Reprise de la session</p>
+                            <p class="text-sm text-green-400 mb-2"><strong>Referensi (EN):</strong> Resumption of the session</p>
+                            <p class="text-sm text-sky-400 mb-4"><strong>Kandidat (Model):</strong> Resumption of the session</p>
+                            <div class="flex space-x-4 pt-4 border-t border-gray-700 text-sm">
+                                <span>Skor BLEU: <strong class="text-white">1.00</strong></span>
+                                <span>Skor METEOR: <strong class="text-white">0.99</strong></span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                            <h5 class="font-bold text-lg text-white mb-3">Contoh Terjemahan 2</h5>
+                            <p class="text-sm text-gray-400 mb-2"><strong>Sumber (FR):</strong> Je déclare reprise la session du Parlement européen qui avait été interrompue le vendredi 17 décembre dernier et je vous renouvelle tous mes vœux en espérant que vous avez passé de bonnes vacances.</p>
+                            <p class="text-sm text-green-400 mb-2"><strong>Referensi (EN):</strong> I declare resumed the session of the European Parliament adjourned on Friday 17 December 1999, and I would like once again to wish you a happy new year in the hope that you enjoyed a pleasant festive period.</p>
+                            <p class="text-sm text-sky-400 mb-4"><strong>Kandidat (Model):</strong> I declare the session of the European Parliament, which was adjourned on Friday, December 17, resumed, and I extend my best wishes to you all, hoping you had a good holiday.</p>
+                             <div class="flex space-x-4 pt-4 border-t border-gray-700 text-sm">
+                                <span>Skor BLEU: <strong class="text-white">0.35</strong></span>
+                                <span>Skor METEOR: <strong class="text-white">0.65</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </section>
+        <div class="my-20 border-t border-dashed border-gray-700"></div>
+
+        
+        <iframe id="result-iframe" src="result.html" style="width:100%; ; height: 100vh; border: none;"></iframe>
+        <!-- Pemisah Antar Bagian -->
+
+
+
+
+        <!-- Bagian Footer -->
+        <footer class="text-center mt-24 pt-8 border-t border-gray-800">
+            <p class="text-gray-500">Dasbor Dibuat dengan <ion-icon name="heart" class="text-red-500"></ion-icon> untuk Visualisasi Evaluasi Benchmark LLM.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Fungsi untuk menyalin kode ke clipboard
+        function copyCode(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const placeholderRegex = /# \.\.\. \(.*\)/g;
+            const cleanCode = codeElement.innerText.replace(placeholderRegex, '').trim();
+
+            const button = event.currentTarget;
+            const copyTextSpan = button.querySelector('span');
+            
+            navigator.clipboard.writeText(cleanCode).then(() => {
+                copyTextSpan.innerText = 'Tersalin!';
+                button.classList.add('bg-green-500');
+                setTimeout(() => {
+                    copyTextSpan.innerText = 'Salin';
+                    button.classList.remove('bg-green-500');
+                }, 2000);
+            }).catch(err => {
+                console.error('Gagal menyalin kode: ', err);
+                copyTextSpan.innerText = 'Gagal';
+                button.classList.add('bg-red-500');
+                 setTimeout(() => {
+                    copyTextSpan.innerText = 'Salin';
+                    button.classList.remove('bg-red-500');
+                }, 2000);
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Evaluasi Benchmark LLM</title>
+    
+    <!-- Impor Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Impor Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Impor Ionicons untuk ikon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Latar belakang abu-abu gelap */
+            color: #d1d5db; /* Teks abu-abu terang */
+        }
+        /* Kustomisasi scrollbar untuk tampilan yang lebih baik */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        /* Gaya untuk blok kode */
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+        }
+        /* Efek gradien pada teks */
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #a78bfa, #34d399, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-sky {
+             background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-purple {
+             background: linear-gradient(to right, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-green {
+             background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-orange {
+             background: linear-gradient(to right, #f97316, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            @apply px-3 py-2 text-gray-300 rounded-md transition-all duration-300 text-sm font-medium;
+        }
+        .nav-link:hover {
+            @apply bg-gray-700 text-white;
+        }
+        .nav-link.active {
+             @apply bg-sky-500 text-white shadow-lg shadow-sky-500/20;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- =================================================================== -->
+    <!-- =================== BAGIAN MMLU PRO BENCHMARK ===================== -->
+    <!-- =================================================================== -->
+    <section id="mmlu-pro-benchmark" class="pt-16">
+        <!-- Header Bagian -->
+        <header class="text-center mb-12">
+            <h2 class="text-4xl sm:text-5xl font-bold mb-2 gradient-text-purple">Evaluasi Benchmark MMLU Pro</h2>
+            <p class="text-lg text-gray-400 mt-4">Mengukur Pengetahuan Multitask Skala Besar</p>
+        </header>
+
+        <!-- Konten Utama MMLU Pro -->
+        <main class="space-y-12">
+            <!-- Pengenalan MMLU Pro -->
+            <section class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                <h3 class="text-2xl font-bold text-purple-400 mb-4 flex items-center">
+                    <ion-icon name="information-circle-outline" class="mr-3 text-3xl"></ion-icon>
+                    Tentang Benchmark MMLU Pro
+                </h3>
+                <p class="text-gray-300 leading-relaxed">
+                    Bagian ini menyajikan hasil dari skrip Python yang mengevaluasi model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">gemma3:4b</code> menggunakan <strong class="text-white">MMLU (Massive Multitask Language Understanding) Pro Benchmark</strong>. Tujuannya adalah untuk mengukur pengetahuan dan kemampuan penalaran model di berbagai domain subjek. Subjek yang diuji meliputi: business, law, psychology, biology, chemistry, history, other, health, economics, math, physics, computer science, philosophy, dan engineering.
+                </p>
+            </section>
+
+            <!-- Kode Sumber MMLU Pro -->
+            <section>
+                 <h3 class="text-2xl font-bold text-purple-400 mb-4 flex items-center">
+                    <ion-icon name="code-slash-outline" class="mr-3 text-3xl"></ion-icon>
+                    Kode Sumber: <code class="text-gray-300">Ollama_MMLU_Pro.ipynb</code>
+                </h3>
+                <div class="relative">
+                    <button onclick="copyCode('code-mmlu-pro')" class="absolute top-4 right-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-all duration-200 text-sm">
+                        <ion-icon name="clipboard-outline" class="mr-2"></ion-icon>
+                        <span id="copy-text-mmlu-pro">Salin</span>
+                    </button>
+                    <pre id="code-mmlu-pro" class="code-block language-python"><code>#@title # Setup
+%cd /content/
+!apt install lshw
+!curl -fsSL https://ollama.com/install.sh | sh
+!git clone --depth 1 https://github.com/sam-paech/Ollama-MMLU-Pro-IRT.git
+%cd Ollama-MMLU-Pro-IRT
+!pip install -r requirements.txt
+
+#@title # Run server
+%env OLLAMA_NUM_PARALLEL=8
+%env OLLAMA_FLASH_ATTENTION=1
+
+import threading
+import subprocess
+server = threading.Thread(target=lambda: subprocess.run(['ollama', 'serve'], check=True), daemon=True)
+server.start()
+import  time
+
+time.sleep(2)
+
+#@title Download
+print("Downloading gemma3:4b")
+!ollama pull gemma3:4b &>/dev/null
+
+#@title Run Test
+!rm -rf eval_results
+!python run_openai.py \
+    --url http://localhost:11434/v1 \
+    --model gemma3:4b \
+    --verbosity 0 \
+    --category 'computer science' \
+    --parallel 2</code></pre>
+                </div>
+            </section>
+            
+            <!-- Penjelasan Kode MMLU Pro -->
+            <section>
+                <h3 class="text-2xl font-bold text-purple-400 mb-6 flex items-center">
+                    <ion-icon name="layers-outline" class="mr-3 text-3xl"></ion-icon>
+                    Penjelasan Kode MMLU Pro
+                </h3>
+                <div class="space-y-6">
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                        <h4 class="font-semibold text-lg text-white mb-2">1. Setup Lingkungan</h4>
+                        <p class="text-gray-300">Menginstal Ollama, mengkloning repositori MMLU Pro, dan menginstal dependensi Python yang diperlukan.</p>
+                    </div>
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                        <h4 class="font-semibold text-lg text-white mb-2">2. Menjalankan Server Ollama</h4>
+                        <p class="text-gray-300">Memulai server Ollama di latar belakang, dengan konfigurasi untuk paralelisme dan perhatian flash.</p>
+                    </div>
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                        <h4 class="font-semibold text-lg text-white mb-2">3. Mengunduh Model</h4>
+                        <p class="text-gray-300">Mengunduh model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">gemma3:4b</code> yang akan digunakan untuk evaluasi.</p>
+                    </div>
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                        <h4 class="font-semibold text-lg text-white mb-2">4. Menjalankan Evaluasi</h4>
+                        <p class="text-gray-300">Menghapus hasil evaluasi sebelumnya dan menjalankan skrip <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">run_openai.py</code> untuk memulai benchmark MMLU Pro.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Visualisasi Hasil MMLU Pro -->
+            <section>
+                 <h3 class="text-2xl font-bold text-purple-400 mb-6 flex items-center">
+                    <ion-icon name="analytics-outline" class="mr-3 text-3xl"></ion-icon>
+                    Contoh Visualisasi Hasil MMLU Pro
+                </h3>
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8 text-center">
+                    <h4 class="text-lg font-medium text-gray-400 mb-2">Skor Keseluruhan (Overall Score)</h4>
+                    <p class="text-5xl font-bold gradient-text-purple">0.65</p>
+                    <p class="text-gray-400 mt-2">(Contoh: Akurasi rata-rata di seluruh subjek)</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-green-500/50 transition-all hover:shadow-lg hover:shadow-green-500/10">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-lg text-white">Subjek: Business</h5>
+                            <span class="bg-green-500/20 text-green-400 text-xs font-bold px-3 py-1 rounded-full flex items-center"><ion-icon name="checkmark-circle-outline" class="mr-1"></ion-icon>72% Akurasi</span>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Contoh Pertanyaan:</strong> Which of the following is typically considered a current asset? (A) Land (B) Accounts Receivable (C) Buildings (D) Patents</p>
+                        <div class="mt-4 pt-4 border-t border-gray-700"><p class="text-sm text-gray-300"><strong>Jawaban Model:</strong> (B) Accounts Receivable</p></div>
+                    </div>
+                    <div class="bg-gray-800/50 p-5 rounded-lg border border-red-500/50 transition-all hover:shadow-lg hover:shadow-red-500/10">
+                        <div class="flex justify-between items-start mb-3">
+                            <h5 class="font-bold text-lg text-white">Subjek: Physics</h5>
+                            <span class="bg-red-500/20 text-red-400 text-xs font-bold px-3 py-1 rounded-full flex items-center"><ion-icon name="close-circle-outline" class="mr-1"></ion-icon>48% Akurasi</span>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-2"><strong>Contoh Pertanyaan:</strong> What is the SI unit of electric current? (A) Volt (B) Ohm (C) Ampere (D) Watt</p>
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <p class="text-sm text-gray-300"><strong>Jawaban Model:</strong> (A) Volt</p>
+                            <p class="text-sm text-green-400 mt-1"><strong>Jawaban Benar:</strong> (C) Ampere</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </section>
+</body>
+<script>
+    function copyCode(elementId) {
+        const codeElement = document.getElementById(elementId);
+        const code = codeElement.textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            const copyTextSpan = document.getElementById(`copy-text-${elementId.split('-')[1]}`);
+            copyTextSpan.textContent = 'Disalin!';
+            setTimeout(() => {
+                copyTextSpan.textContent = 'Salin';
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Evaluasi Benchmark LLM</title>
+    
+    <!-- Impor Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Impor Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Impor Ionicons untuk ikon -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Latar belakang abu-abu gelap */
+            color: #d1d5db; /* Teks abu-abu terang */
+        }
+        /* Kustomisasi scrollbar untuk tampilan yang lebih baik */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        /* Gaya untuk blok kode */
+        .code-block {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            overflow-x: auto;
+            color: #e5e7eb;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+        }
+        /* Efek gradien pada teks */
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #a78bfa, #34d399, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-sky {
+             background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-purple {
+             background: linear-gradient(to right, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-green {
+             background: linear-gradient(to right, #34d399, #6ee7b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-text-orange {
+             background: linear-gradient(to right, #f97316, #facc15);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link {
+            @apply px-3 py-2 text-gray-300 rounded-md transition-all duration-300 text-sm font-medium;
+        }
+        .nav-link:hover {
+            @apply bg-gray-700 text-white;
+        }
+        .nav-link.active {
+             @apply bg-sky-500 text-white shadow-lg shadow-sky-500/20;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+ 
+ 
+ <!-- =================================================================== -->
+        <!-- =================== BAGIAN BIG-BENCH HARD BENCHMARK ======================== -->
+        <!-- =================================================================== -->
+        <section id="bigbench-hard-benchmark" class="pt-16 ">
+            <header class="text-center mb-12">
+               <h2 class="text-4xl sm:text-5xl font-bold mb-2 gradient-text-sky">Evaluasi Benchmark Big-Bench Hard</h2>
+               <p class="text-lg text-gray-400 mt-4">Menguji Kemampuan Penalaran Tingkat Lanjut</p>
+           </header>
+           <main class="space-y-12">
+               <section class="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg border border-gray-700">
+                   <h3 class="text-2xl font-bold text-sky-400 mb-4 flex items-center"><ion-icon name="cube-outline" class="mr-3 text-3xl"></ion-icon>Tentang Benchmark Big-Bench Hard</h3>
+                   <p class="text-gray-300 leading-relaxed">Bagian ini didedikasikan untuk evaluasi model menggunakan <strong class="text-white">Big-Bench Hard</strong>. Benchmark ini terdiri dari berbagai tugas yang menguji kemampuan penalaran tingkat lanjut dari model bahasa besar.</p>
+               </section>
+               
+               <section>
+                    <h3 class="text-2xl font-bold text-sky-400 mb-4 flex items-center">
+                       <ion-icon name="code-slash-outline" class="mr-3 text-3xl"></ion-icon>
+                       Kode Sumber: <code class="text-gray-300">BigBenchHard.py</code>
+                   </h3>
+                   <div class="relative">
+                       <button onclick="copyCode('code-bigbench-hard')" class="absolute top-4 right-4 bg-gray-600 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition-all duration-200 text-sm">
+                           <ion-icon name="clipboard-outline" class="mr-2"></ion-icon>
+                           <span id="copy-text-bigbench-hard">Salin</span>
+                       </button>
+                       <pre id="code-bigbench-hard" class="code-block language-python"><code>from deepeval.benchmarks import BigBenchHard
+from deepeval.benchmarks.tasks import BigBenchHardTask
+from deepeval.models import OllamaModel
+
+llm = OllamaModel(
+    model="gemma3:1b"  # Replace with your model name
+)
+print(llm)
+
+
+# Define benchmark with specific tasks and shots
+benchmark = BigBenchHard(
+    tasks=[BigBenchHardTask.BOOLEAN_EXPRESSIONS],
+    n_problems_per_task=81
+)
+
+# Replace 'hf.co/CALISTA-INDUSTRY/gemma_3_1B_reasoning_multimodal_en_ft_v2' with your own custom model
+benchmark.evaluate(model=llm)
+print(benchmark.overall_score)</code></pre>
+                   </div>
+               </section>
+               
+               <section>
+                   <h3 class="text-2xl font-bold text-sky-400 mb-6 flex items-center">
+                       <ion-icon name="layers-outline" class="mr-3 text-3xl"></ion-icon>
+                       Penjelasan Kode Big-Bench Hard
+                   </h3>
+                   <div class="space-y-6">
+                       <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                           <h4 class="font-semibold text-lg text-white mb-2">1. Inisialisasi Model Ollama</h4>
+                           <p class="text-gray-300">Kode ini menginisialisasi model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">OllamaModel</code> dengan nama model <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">gemma3:1b</code>. Anda dapat mengganti ini dengan nama model Ollama Anda sendiri.</p>
+                       </div>
+                       <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                           <h4 class="font-semibold text-lg text-white mb-2">2. Konfigurasi Benchmark Big-Bench Hard</h4>
+                           <p class="text-gray-300">Benchmark <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">BigBenchHard</code> dikonfigurasi untuk mengevaluasi tugas tertentu, dalam contoh ini <code class="bg-gray-700 px-2 py-1 rounded-md text-sm">BOOLEAN_EXPRESSIONS</code>, dengan 81 masalah per tugas.</p>
+                       </div>
+                       <div class="bg-gray-800/50 p-5 rounded-lg border border-gray-700">
+                           <h4 class="font-semibold text-lg text-white mb-2">3. Evaluasi Model</h4>
+                           <p class="text-gray-300">Model dievaluasi menggunakan benchmark yang telah dikonfigurasi, dan skor keseluruhan kemudian dicetak.</p>
+                       </div>
+                   </div>
+               </section>
+
+               <section>
+                    <h3 class="text-2xl font-bold text-sky-400 mb-6 flex items-center">
+                       <ion-icon name="analytics-outline" class="mr-3 text-3xl"></ion-icon>
+                       Contoh Visualisasi Hasil Big-Bench Hard
+                   </h3>
+                   <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 mb-8 text-center">
+                       <h4 class="text-lg font-medium text-gray-400 mb-2">Skor Keseluruhan (Overall Score)</h4>
+                       <p class="text-5xl font-bold gradient-text-sky">0.75</p>
+                       <p class="text-gray-400 mt-2">(Contoh: Akurasi Rata-rata)</p>
+                   </div>
+                   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                       <div class="bg-gray-800/50 p-5 rounded-lg border border-sky-500/50 transition-all hover:shadow-lg hover:shadow-sky-500/10">
+                           <div class="flex justify-between items-start mb-3">
+                               <h5 class="font-bold text-lg text-white">Tugas 1 (Boolean Expressions)</h5>
+                               <span class="bg-sky-500/20 text-sky-400 text-xs font-bold px-3 py-1 rounded-full flex items-center"><ion-icon name="checkmark-circle-outline" class="mr-1"></ion-icon>BENAR</span>
+                           </div>
+                           <p class="text-sm text-gray-400 mb-2"><strong>Pertanyaan:</strong> Does the following statement logically imply that "A is true and B is false": "If A is true, then B is false."?</p>
+                           <div class="mt-4 pt-4 border-t border-gray-700"><p class="text-sm text-gray-300"><strong>Jawaban Model:</strong> No</p></div>
+                       </div>
+                       <div class="bg-gray-800/50 p-5 rounded-lg border border-red-500/50 transition-all hover:shadow-lg hover:shadow-red-500/10">
+                           <div class="flex justify-between items-start mb-3">
+                               <h5 class="font-bold text-lg text-white">Tugas 2 (Causal Judgement)</h5>
+                               <span class="bg-red-500/20 text-red-400 text-xs font-bold px-3 py-1 rounded-full flex items-center"><ion-icon name="close-circle-outline" class="mr-1"></ion-icon>SALAH</span>
+                           </div>
+                           <p class="text-sm text-gray-400 mb-2"><strong>Pertanyaan:</strong> A and B are two events. If A happens, B is very likely to happen. If A does not happen, B is still very likely to happen. Is A a cause of B?</p>
+                           <div class="mt-4 pt-4 border-t border-gray-700">
+                               <p class="text-sm text-gray-300"><strong>Jawaban Model:</strong> Yes</p>
+                               <p class="text-sm text-sky-400 mt-1"><strong>Jawaban Benar:</strong> No</p>
+                           </div>
+                       </div>
+                   </div>
+               </section>
+           </main>
+       </section>
+</body>
+</html>
