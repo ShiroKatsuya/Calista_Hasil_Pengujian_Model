@@ -97,10 +97,11 @@
             <div class="flex items-center justify-between h-16">
                 <h1 class="text-xl font-bold gradient-text">Dasbor Evaluasi LLM</h1>
                 <nav class="hidden md:flex items-center space-x-1">
+                    <a href="#lora_grpo" class="nav-link" onclick="loadIframe('lora_grpo')">LORA</a>
                     <a href="#big_bench_hard" class="nav-link" onclick="loadIframe('big_bench_hard')">BBH</a>
-                    <a href="#mmlu-pro-iframe" class="nav-link" onclick="loadIframe('mmlu-pro-iframe')">MMLU_Pro</a>
-                    <a href="#translation-benchmark" class="nav-link" onclick="loadIframe('translation-iframe')">BLEU & METEOR</a>
-                    <a href="#result-iframe" class="nav-link" onclick="loadIframe('result-iframe')">HASIL_PENGUJIAN</a>
+                    <a href="#mmlu-pro-iframe" class="nav-link" onclick="loadIframe('mmlu-pro-iframe')">MMLU_PRO</a>
+                    <a href="#translation-benchmark" class="nav-link" onclick="loadIframe('translation-iframe')">BLEU_METEOR</a>
+                    <a href="#result-iframe" class="nav-link" onclick="loadIframe('result-iframe')">TEST_RESULTS</a>
                 </nav>
             </div>
         </div>
@@ -109,6 +110,12 @@
     <div class="container mx-auto p-4 sm:p-6 lg:p-8" style="width: 100%;">
 
 
+
+        <iframe id="lora_grpo" src="lora_grpo.html" style="width:100%; ; height: 100vh; border: none;"></iframe>
+
+       
+        <!-- Pemisah Antar Bagian -->
+        <div class="my-20 border-t border-dashed border-gray-700"></div>
 
         <iframe id="big_bench_hard" src="big_bench_hard.html" style="width:100%; ; height: 100vh; border: none;"></iframe>
 
